@@ -10,11 +10,11 @@ const getUsers = async (req = request, res = response) => {
 
     const query = {status: true}
 
-    const [users, total] = await Promise.all([
+    const [total, users] = await Promise.all([
+        User.countDocuments(query),
         User.find(query)
         .limit(limit * 1)
-        .skip((page - 1) * limit),
-        User.countDocuments()
+        .skip((page - 1) * limit)
     ])
 
     res.json({
@@ -58,9 +58,16 @@ const updateUser = async (req, res = response) => {
     })
 }
 
-const deleteUser = (req, res = response) => {
+const deleteUser = async (req, res = response) => {
+
+    const { id } = req.params
+
+    const user = await User.findByIdAndUpdate(id, {status: false})
+
+
     res.json({
-        msg: 'Get Users'
+        msg: 'Usuario Borrado',
+        user
     })
 }
 

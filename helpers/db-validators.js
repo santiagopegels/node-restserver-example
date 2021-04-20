@@ -22,8 +22,16 @@ const existsUserById = async(id = '') =>{
     }
 }
 
+const hasUserDeleted = async(id = '') =>{
+    const {status} = await User.findById(id)
+    if(!status){
+        throw new Error('El usuario ya ha sido eliminado.')
+    }
+}
+
 module.exports = {
     isValidRole,
     existsEmail,
-    existsUserById
+    existsUserById,
+    hasUserDeleted
 }
