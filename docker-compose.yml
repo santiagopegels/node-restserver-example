@@ -1,0 +1,19 @@
+version: '3'
+services:
+
+  mongo:
+    image: mongo:4.2
+    container_name: ${MONGO_HOST}
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
+    volumes:
+      - ${MONGO_VOLUMEN}:/data/db
+    ports:
+      - ${MONGO_PORT}:27017
+    logging:
+          driver: "json-file"
+          options:
+            max-size: "200k"
+            max-file: "10"
