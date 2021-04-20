@@ -29,11 +29,20 @@ const createUser = (req, res = response) => {
     })
 }
 
-const updateUser = (req, res = response) => {
+const updateUser = async (req, res = response) => {
     const { id } = req.params
+    const {_id, password, google, email, ...resto} = req.body
+    
+    if(password){
+        const salt = bcrypt.genSaltSync()
+        resto.password = bcrypt.hashSync(password, salt)
+    }
+
+    const user = await User.findByIdAndUpdate(id, resto, {new: true})
+    
     res.json({
-        msg: 'Get Users',
-        id
+        msg: 'Actualizado',
+        user
     })
 }
 
