@@ -12,6 +12,7 @@ const getCategories = async (req = request, res = response) => {
     const [total, categories] = await Promise.all([
         Category.countDocuments(query),
         Category.find(query)
+            .populate('user', 'name')
             .limit(limit * 1)
             .skip((page - 1) * limit)
     ])
@@ -28,7 +29,7 @@ const getCategories = async (req = request, res = response) => {
 const getCategory = async (req, res) => {
     const { id } = req.params
 
-    const category = await Category.findById(id)
+    const category = await Category.findById(id).populate('user', 'name')
 
     if (!category) {
         return res.status(401).json({
@@ -49,7 +50,7 @@ const getCategory = async (req, res) => {
 
 const createCategory = async (req, res, next) => {
     const name = req.body.name.toUpperCase()
-
+    
     const categoryDB = await Category.findOne({ name })
 
     if (Boolean(categoryDB)) {
@@ -74,9 +75,12 @@ const createCategory = async (req, res, next) => {
 
 const updateCategory = async (req, res) => {
     const { id } = req.params
-    const { name } = req.body
+    const { status, user, ...data } = req.body
 
-    const category = await Category.findByIdAndUpdate(id, { 'name': name.toUpperCase() }, { new: true })
+    data.name = data.name.toUpperCase()
+    data.user = req.user._id
+
+    const category = await Category.findByIdAndUpdate(id, data, { new: true })
 
     if (!category) {
         return res.status(401).json({

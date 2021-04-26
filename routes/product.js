@@ -1,18 +1,18 @@
 const { Router } = require('express')
 const { check } = require('express-validator')
 const {
-    getCategories,
-    getCategory,
-    createCategory,
-    updateCategory,
-    deleteCategory } = require('../controllers/categories')
+    getProducts,
+    getProduct,
+    createProduct,
+    updateProduct,
+    deleteProduct } = require('../controllers/products')
 
 const {
     fieldValidator,
     validateJWT,
     isAdminRole } = require('../middlewares/index')
 
-const { existsCategoryById } = require('../helpers/db-validators')
+const { existsProductById } = require('../helpers/db-validators')
 
 const router = Router()
 
@@ -20,34 +20,34 @@ router.get('/', [
     check('email', 'El correo no es válido').isEmail(),
     check('password', 'Ingrese la contraseña').notEmpty(),
     fieldValidator
-], getCategories)
+], getProducts)
 
 router.get('/:id', [
     check('id', 'Falta el id').notEmpty(),
-    check('id').custom(existsCategoryById),
+    check('id').custom(existsProductById),
     fieldValidator
-], getCategory)
+], getProduct)
 
 router.post('/', [
     validateJWT,
     check('name', 'El nombre es obligatorio').notEmpty(),
     fieldValidator
-], createCategory)
+], createProduct)
 
 router.put('/:id', [
     validateJWT,
     check('id', 'Falta el id').notEmpty(),
-    check('id').custom(existsCategoryById),
+    check('id').custom(existsProductById),
     check('name', 'El nombre es obligatorio').notEmpty(),
     fieldValidator
-], updateCategory)
+], updateProduct)
 
 router.delete('/:id', [
     validateJWT,
     isAdminRole,
     check('id', 'Falta el id').notEmpty(),
-    check('id').custom(existsCategoryById),
+    check('id').custom(existsProductById),
     fieldValidator
-], deleteCategory)
+], deleteProduct)
 
 module.exports = router
