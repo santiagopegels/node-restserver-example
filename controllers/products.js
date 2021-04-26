@@ -81,7 +81,10 @@ const updateProduct = async (req, res) => {
     const { id } = req.params
     const { status, user, ...data } = req.body
 
-    data.name = data.name.toUpperCase()
+    if(data.name){
+        data.name = data.name.toUpperCase()
+    }
+    
     data.user = req.user._id
 
     const product = await Product.findByIdAndUpdate(id, data, { new: true })
