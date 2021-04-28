@@ -20,7 +20,7 @@ const uploadFile = (files, allowedExtensions = ['png', 'jpg', 'jpeg', 'gif'], fo
                 return reject(err)
             }
 
-            resolve(`El archivo ${fileName} se subió correctamente`);
+            resolve(fileName);
         });
     })
 }
