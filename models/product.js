@@ -34,6 +34,9 @@ const ProductSchema = Schema({
     },
     img: {
         type:String
+    },
+    img_local: {
+        type:String
     }
 })
 
