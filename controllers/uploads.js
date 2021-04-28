@@ -1,40 +1,39 @@
-const path = require('path')
 const response = require("express");
-const { v4: uuidv4 } = require('uuid');
+const { uploadFile } = require('../helpers')
 
-const uploadFile = (req, res = response) => {
+const upload = async (req, res = response) => {
 
-  if (!req.files || Object.keys(req.files).length === 0) {
-    res.status(400).send('No files were uploaded.');
-    return;
-  }
+  try {
 
-  const { file } = req.files;
-  const fileNameSplit = file.name.split('.')
-  const extension = fileNameSplit[fileNameSplit.length - 1]
-
-  const allowedExtensions = ['png', 'jpg', 'jpeg', 'gif'] 
-
-  if(!allowedExtensions.includes('extension')){
-    return res.status(400).json({
-      msg: 'El tipo de archivo no está permitido.'
-    })
-  } 
-
-  const fileName = uuidv4() + '.' + extension
-
-  uploadPath = path.join(__dirname, '../uploads/', fileName);
-
-  file.mv(uploadPath, function (err) {
-    if (err) {
-      return res.status(500).json({ err });
+    if (!req.files || Object.keys(req.files).length === 0) {
+      res.status(400).send('No files were uploaded.');
+      return;
     }
 
-    res.json({ msg: 'El archivo se subio a ' + uploadPath });
-  });
+    const msg = await uploadFile(req.files, undefined, 'images')
 
+    res.json({
+      msg
+    })
+  }
+
+  catch (error) {
+    return res.status(400).json({
+      msg: error
+    })
+  }
+}
+
+const updateCollectionImage = (req, res = response) => {
+  const {id, collection} = req.params
+
+  return res.json({
+    id,
+    collection
+  })
 }
 
 module.exports = {
-  uploadFile
+  upload,
+  updateCollectionImage
 }
