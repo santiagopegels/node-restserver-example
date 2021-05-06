@@ -18,7 +18,7 @@ class Chat {
         return this.messages.splice(0, 10)
     }
 
-    get userArray() {
+    get usersArray() {
         return Object.values(this.users)
     }
 

@@ -62,8 +62,8 @@ const conectSocket = async () => {
         
     })
 
-    socketServer.on('active-users', ()=> {
-        
+    socketServer.on('active-users', (payload)=> {
+        console.log(payload)
     })
 
 }
