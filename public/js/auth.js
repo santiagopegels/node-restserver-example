@@ -21,7 +21,13 @@ miFormulario.addEventListener('submit', ev => {
         headers: {'Content-Type': 'application/json'}
     })
     .then(response => response.json())
-    .then( data => console.log(data))
+    .then( ({msg, token}) => {
+
+        if(msg){
+            return console.error(msg);
+        }
+        localStorage.setItem('token', token);
+    })
     .catch(error => console.log(error))
 
 })
@@ -41,7 +47,7 @@ miFormulario.addEventListener('submit', ev => {
                 body: JSON.stringify(data)
             })
             .then( resp => resp.json() )
-            .then( ({token}) => {
+            .then( ({msg,token}) => {
                 localStorage.setItem('token', token);
                 
             })
