@@ -54,18 +54,35 @@ const conectSocket = async () => {
         console.log('Sockets offline');
     })
 
-    socketServer.on('recieve-message', ()=> {
+    socketServer.on('recieve-message', () => {
+
+    })
+
+    socketServer.on('private-message', () => {
+
+    })
+
+    socketServer.on('active-users', drawUsers)
+}
+
+const drawUsers = (users = []) => {
+   
+    let usersHtml = ''
+
+    users.forEach( ({name, uid}) => {
         
-    })
-
-    socketServer.on('private-message', ()=> {
-        
-    })
-
-    socketServer.on('active-users', (payload)=> {
-        console.log(payload)
-    })
-
+        usersHtml += `
+            <li>
+                <p>
+                    <h5 class="text-success">${name}</h5>
+                    
+                    <span class="fs-6 text-muted">${uid}</span>
+                </p>
+            </li>
+        `
+    });
+    
+    connectUserList.innerHTML = usersHtml
 }
 
 const main = async () => {
