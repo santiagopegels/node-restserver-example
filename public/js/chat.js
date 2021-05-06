@@ -8,7 +8,7 @@ let user = null
 let socketServer = null
 
 const txtUid = document.querySelector('#txtUid')
-const txtMensaje = document.querySelector('#txtMensaje')
+const txtMessage = document.querySelector('#txtMessage')
 const connectUserList = document.querySelector('#connectUserList')
 const chatList = document.querySelector('#chatList')
 const btnLogout = document.querySelector('#btnLogout')
@@ -39,7 +39,7 @@ const validateJWT = async () => {
 
 const conectSocket = async () => {
 
-    const socketServer = io({
+    socketServer = io({
         'extraHeaders': {
             'x-token': localStorage.getItem('token')
         }
@@ -54,8 +54,8 @@ const conectSocket = async () => {
         console.log('Sockets offline');
     })
 
-    socketServer.on('recieve-message', () => {
-
+    socketServer.on('receive-message', (payload) => {
+        console.log(payload)
     })
 
     socketServer.on('private-message', () => {
@@ -66,11 +66,11 @@ const conectSocket = async () => {
 }
 
 const drawUsers = (users = []) => {
-   
+
     let usersHtml = ''
 
-    users.forEach( ({name, uid}) => {
-        
+    users.forEach(({ name, uid }) => {
+
         usersHtml += `
             <li>
                 <p>
@@ -81,9 +81,20 @@ const drawUsers = (users = []) => {
             </li>
         `
     });
-    
+
     connectUserList.innerHTML = usersHtml
 }
+
+txtMessage.addEventListener('keyup', ({ keyCode }) => {
+    const message = txtMessage.value
+    const uid = txtUid.value
+    if (keyCode !== 13) { return; }
+
+    if(message.length === 0) {return;}
+
+    socketServer.emit('send-message', {message, uid})
+
+})
 
 const main = async () => {
     await validateJWT()

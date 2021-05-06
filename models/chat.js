@@ -11,11 +11,13 @@ class Message {
 class Chat {
     constructor() {
         this.messages = []
+        this.lastTenMessages = []
         this.users = {}
     }
 
     get lastsMessages() {
-        return this.messages.splice(0, 10)
+        this.messages = this.messages.splice(0,10)
+        return this.messages
     }
 
     get usersArray() {
