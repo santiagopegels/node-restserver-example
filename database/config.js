@@ -9,7 +9,7 @@ const dbConnection = async () => {
            useUnifiedTopology: true,
            useCreateIndex: true,
            useFindAndModify: false
-       })
+       }) 
 
        console.log('DB Online :)')
 
