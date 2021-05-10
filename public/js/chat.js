@@ -11,6 +11,7 @@ const txtUid = document.querySelector('#txtUid')
 const txtMessage = document.querySelector('#txtMessage')
 const connectUserList = document.querySelector('#connectUserList')
 const chatList = document.querySelector('#chatList')
+const privateChatList = document.querySelector('#privateChatList')
 const btnLogout = document.querySelector('#btnLogout')
 
 const validateJWT = async () => {
@@ -54,13 +55,9 @@ const conectSocket = async () => {
         console.log('Sockets offline');
     })
 
-    socketServer.on('receive-message', (payload) => {
-        console.log(payload)
-    })
+    socketServer.on('receive-message', drawMessages)
 
-    socketServer.on('private-message', () => {
-
-    })
+    socketServer.on('private-message', drawPrivateMessages)
 
     socketServer.on('active-users', drawUsers)
 }
@@ -85,6 +82,43 @@ const drawUsers = (users = []) => {
     connectUserList.innerHTML = usersHtml
 }
 
+const drawMessages = (messages = []) => {
+
+    let messageHtml = ''
+
+    messages.forEach(({ name, message }) => {
+
+        messageHtml += `
+            <li>
+                <p>
+                    <span class="text-success">${name}</span>
+                    
+                    <span>${message}</span>
+                </p>
+            </li>
+        `
+    });
+
+    chatList.innerHTML = messageHtml
+}
+
+const drawPrivateMessages = (message = {}) => {
+    
+    let privateMessageHtml = ''
+
+        privateMessageHtml += `
+            <li>
+                <p>
+                    <span class="text-success">${message.from}</span>
+                    
+                    <span>${message.message}</span>
+                </p>
+            </li>
+        `
+
+    privateChatList.innerHTML = privateMessageHtml
+}
+
 txtMessage.addEventListener('keyup', ({ keyCode }) => {
     const message = txtMessage.value
     const uid = txtUid.value
@@ -94,6 +128,7 @@ txtMessage.addEventListener('keyup', ({ keyCode }) => {
 
     socketServer.emit('send-message', {message, uid})
 
+    txtMessage.value = ''
 })
 
 const main = async () => {

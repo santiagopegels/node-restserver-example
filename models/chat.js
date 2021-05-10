@@ -11,7 +11,6 @@ class Message {
 class Chat {
     constructor() {
         this.messages = []
-        this.lastTenMessages = []
         this.users = {}
     }
 
